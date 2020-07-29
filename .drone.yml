@@ -1,0 +1,26 @@
+---
+kind: pipeline
+name: notify-pipeline-start
+
+# clone:
+#   disable: true
+
+steps:
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: SLACK_WEBHOOK
+      channel: drone-io
+      username: Drone
+      link_names: true
+      template: >
+        {{#if build.pull }}
+          *Build started*: {{ repo.owner }}/{{ repo.name }} - <http://gitea.cling.nas/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
+        {{else}}
+          *Build started: {{ repo.owner }}/{{ repo.name }} - Build #{{ build.number }}* (type: `{{ build.event }}`)
+        {{/if}}
+        Commit: <http://gitea.cling.nas/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
+        Branch: <http://gitea.cling.nas/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
+        Author: {{ build.author }}
+        <{{ build.link }}|Visit build page ↗>
