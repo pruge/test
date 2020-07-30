@@ -12,7 +12,7 @@ steps:
       webhook:
         from_secret: SLACK_WEBHOOK
       channel: drone-io
-      username: Drone
+      username: Drone2
       link_names: true
       template: >
         {{#if build.pull }}
